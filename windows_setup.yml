@@ -1,0 +1,78 @@
+---
+- name: Install and configure essential applications on Windows
+  hosts: localhost
+  tasks:
+    # Pre-run: Install Chocolatey if not already installed
+    - name: Install Chocolatey
+      win_shell: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force;
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+      args:
+        executable: powershell.exe
+      register: chocolatey_install
+      changed_when: chocolatey_install.rc == 0
+
+    # Install WPS Office
+    - name: Install WPS Office
+      win_chocolatey:
+        name: wps-office-free
+        state: present
+
+    # Install Google Chrome
+    - name: Install Google Chrome
+      win_chocolatey:
+        name: googlechrome
+        state: present
+
+    # Install AnyDesk
+    - name: Install AnyDesk
+      win_chocolatey:
+        name: anydesk
+        state: present
+
+    # Install Microsoft Teams
+    - name: Install Microsoft Teams
+      win_chocolatey:
+        name: microsoft-teams
+        state: present
+
+    # Install Adobe Acrobat Reader (PDF viewer)
+    - name: Install Adobe Acrobat Reader DC
+      win_chocolatey:
+        name: adobereader
+        state: present
+
+    # Install Outlook (via Microsoft Office package)
+    - name: Install Microsoft Office 365 (for Outlook Desktop)
+      win_chocolatey:
+        name: office365-business
+        state: present
+
+    # Configure Chrome Browser Settings (example: setting homepage)
+    - name: Configure Chrome homepage
+      win_registry:
+        path: HKCU\Software\Google\Chrome\PreferenceMACs\Default\HomePage
+        name: homepage
+        type: string
+        value: "https://www.example.com"
+
+    # Example: Configure WPS Office settings (if specific settings are required)
+    - name: Configure WPS Office (example settings)
+      win_file:
+        path: "C:\\Users\\{{ ansible_user }}\\AppData\\Roaming\\WPS Office\\configs"
+        state: directory
+
+    # Enable AnyDesk to start with Windows (example task)
+    - name: Configure AnyDesk to start with Windows
+      win_service:
+        name: AnyDesk
+        start_mode: auto
+        state: started
+
+    # Set up Outlook configuration (you may need more complex setup if using specific profiles)
+    - name: Example - Configure Outlook Desktop (basic placeholder)
+      win_shell: |
+        Start-Process "outlook.exe" -ArgumentList "/profile MyProfile"
+      args:
+        executable: powershell.exe
