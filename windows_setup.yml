@@ -49,30 +49,5 @@
         name: office365-business
         state: present
 
-    # Configure Chrome Browser Settings (example: setting homepage)
-    - name: Configure Chrome homepage
-      win_registry:
-        path: HKCU\Software\Google\Chrome\PreferenceMACs\Default\HomePage
-        name: homepage
-        type: string
-        value: "https://www.example.com"
 
-    # Example: Configure WPS Office settings (if specific settings are required)
-    - name: Configure WPS Office (example settings)
-      win_file:
-        path: "C:\\Users\\{{ ansible_user }}\\AppData\\Roaming\\WPS Office\\configs"
-        state: directory
-
-    # Enable AnyDesk to start with Windows (example task)
-    - name: Configure AnyDesk to start with Windows
-      win_service:
-        name: AnyDesk
-        start_mode: auto
-        state: started
-
-    # Set up Outlook configuration (you may need more complex setup if using specific profiles)
-    - name: Example - Configure Outlook Desktop (basic placeholder)
-      win_shell: |
-        Start-Process "outlook.exe" -ArgumentList "/profile MyProfile"
-      args:
-        executable: powershell.exe
+    
